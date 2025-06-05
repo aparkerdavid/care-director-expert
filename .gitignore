@@ -1,0 +1,46 @@
+# Qdrant binary and data
+qdrant
+storage/
+snapshots/
+
+# Documents directory (user's private documents)
+documents/
+
+# Python virtual environment (uv)
+.venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Downloaded README
+qdrant-mcp-readme.md
