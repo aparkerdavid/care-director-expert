@@ -12,12 +12,19 @@ from llama_index.vector_stores.qdrant import QdrantVectorStore
 
 
 def process_documents(docs_path: str = "./documents", collection_name: str = "documents"):
-    """Process documents and store in Qdrant."""
+    """Process documents and store in Qdrant. Rebuilds collection from scratch."""
     
     # Initialize Qdrant client (assumes running on localhost:6333)
     client = QdrantClient(host="localhost", port=6333)
     
-    # Create vector store
+    # Delete existing collection if it exists
+    try:
+        client.delete_collection(collection_name)
+        print(f"Deleted existing collection '{collection_name}'")
+    except Exception:
+        print(f"Collection '{collection_name}' doesn't exist yet")
+    
+    # Create vector store (will create new collection)
     vector_store = QdrantVectorStore(
         client=client,
         collection_name=collection_name,
