@@ -43,12 +43,6 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
         }
     )
 
-    vector_store = QdrantVectorStore(
-        client=client,
-        collection_name=collection_name,
-        dense_vector_name="fast-all-minilm-l6-v2"  # Override default "text-dense"
-    )
-    
     # Check if documents directory exists
     if not os.path.exists(docs_path):
         print(f"Creating documents directory: {docs_path}")
@@ -66,15 +60,46 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
 
     print(f"Loaded {len(documents)} documents")
 
-    # Create index with Qdrant vector store
-    print("Creating index and storing embeddings...")
+    # Use LlamaIndex for chunking but store in MCP-compatible format
+    print("Processing documents and storing embeddings...")
     try:
-        storage_context = StorageContext.from_defaults(vector_store=vector_store)
-        index = VectorStoreIndex.from_documents(
-            documents,
-            storage_context=storage_context,
+        from llama_index.core.node_parser import SentenceSplitter
+        
+        # Use LlamaIndex chunking
+        node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=50)
+        nodes = node_parser.get_nodes_from_documents(documents)
+        print(f"Created {len(nodes)} chunks")
+        
+        # Store chunks in MCP-compatible format
+        points = []
+        for i, node in enumerate(nodes):
+            # Get embedding
+            embedding = Settings.embed_model.get_text_embedding(node.text)
+            
+            # Create MCP-compatible payload with 'document' field
+            payload = {
+                "document": node.text,  # MCP server expects this field
+                "metadata": {
+                    "file_path": node.metadata.get("file_path", ""),
+                    "file_name": node.metadata.get("file_name", ""),
+                    "chunk_id": str(i),
+                    "node_id": node.node_id,
+                }
+            }
+            
+            points.append(models.PointStruct(
+                id=node.node_id,
+                vector={"fast-all-minilm-l6-v2": embedding},
+                payload=payload
+            ))
+        
+        # Upload to Qdrant
+        client.upsert(
+            collection_name=collection_name,
+            points=points,
+            wait=True
         )
-        print(f"Index created successfully")
+        print(f"Successfully stored {len(points)} chunks")
 
         # Check final state
         collections_after = client.get_collections()
@@ -90,8 +115,6 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
         return None
 
     print(f"Successfully processed and stored {len(documents)} documents in Qdrant collection '{collection_name}'")
-    return index
-
 
 if __name__ == "__main__":
     import sys
