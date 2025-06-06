@@ -32,17 +32,21 @@ def launch_mcp_server():
     if len(sys.argv) > 1:
         transport = sys.argv[1]
     
+    # Set up logging
+    log_file = script_dir / "mcp_server.log"
     print(f"Starting Qdrant MCP server with transport: {transport}")
     print(f"Qdrant URL: {env['QDRANT_URL']}")
     print(f"Collection: {env['COLLECTION_NAME']}")
     print(f"Embedding model: {env['EMBEDDING_MODEL']}")
+    print(f"Logs will be written to: {log_file}")
     print("-" * 50)
     
     # Launch the MCP server
     cmd = ["mcp-server-qdrant", "--transport", transport]
     
     try:
-        subprocess.run(cmd, env=env, check=True)
+        with open(log_file, "w") as f:
+            subprocess.run(cmd, env=env, check=True, stderr=f)
     except KeyboardInterrupt:
         print("\nMCP server stopped")
     except subprocess.CalledProcessError as e:
