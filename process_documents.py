@@ -52,7 +52,7 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
 
     # Load documents using LlamaIndex defaults
     print(f"Loading documents from {docs_path}...")
-    documents = SimpleDirectoryReader(docs_path).load_data()
+    documents = SimpleDirectoryReader(input_dir=docs_path, recursive=True).load_data()
 
     if not documents:
         print(f"No documents found in {docs_path}")
