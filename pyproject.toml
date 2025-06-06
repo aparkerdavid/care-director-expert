@@ -1,0 +1,15 @@
+[project]
+name = "care-director-expert"
+version = "0.1.0"
+description = "Qdrant MCP server integration with LlamaIndex for document search"
+dependencies = [
+    "llama-index",
+    "qdrant-client", 
+    "llama-index-vector-stores-qdrant",
+    "llama-index-embeddings-fastembed",
+    "mcp-server-qdrant",
+    "cryptography>=3.1"  # Required for encrypted PDFs
+]
+
+[tool.setuptools]
+packages = []
