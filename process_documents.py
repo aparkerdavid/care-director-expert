@@ -16,7 +16,7 @@ from llama_index.vector_stores.qdrant import QdrantVectorStore
 def process_documents(docs_path: str = "./documents", collection_name: str = "documents"):
     """Process documents and store in Qdrant. Rebuilds collection from scratch."""
     
-    # Configure LlamaIndex to use FastEmbed (same as MCP server)
+    # use FastEmbed (same as MCP server)
     Settings.embed_model = FastEmbedEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
     try:
@@ -35,22 +35,20 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
         print(f"Collection '{collection_name}' doesn't exist yet")
     
 
-    # Create collection with named vector config to match MCP server expectations
     client.create_collection(
         collection_name=collection_name,
         vectors_config={
+            # Qdrant MCP server requires this specific vector name!
             "fast-all-minilm-l6-v2": models.VectorParams(size=384, distance=models.Distance.COSINE)
         }
     )
 
-    # Check if documents directory exists
     if not os.path.exists(docs_path):
         print(f"Creating documents directory: {docs_path}")
         os.makedirs(docs_path)
         print(f"Please add documents to {docs_path} and run again.")
         return
 
-    # Load documents using LlamaIndex defaults
     print(f"Loading documents from {docs_path}...")
     documents = SimpleDirectoryReader(input_dir=docs_path, recursive=True).load_data()
 
@@ -60,25 +58,21 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
 
     print(f"Loaded {len(documents)} documents")
 
-    # Use LlamaIndex for chunking but store in MCP-compatible format
     print("Processing documents and storing embeddings...")
     try:
         from llama_index.core.node_parser import SentenceSplitter
         
-        # Use LlamaIndex chunking
         node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=50)
         nodes = node_parser.get_nodes_from_documents(documents)
         print(f"Created {len(nodes)} chunks")
         
-        # Store chunks in MCP-compatible format
         points = []
         for i, node in enumerate(nodes):
-            # Get embedding
             embedding = Settings.embed_model.get_text_embedding(node.text)
             
-            # Create MCP-compatible payload with 'document' field
+            # Qdrant MCP server requires this payload format
             payload = {
-                "document": node.text,  # MCP server expects this field
+                "document": node.text,
                 "metadata": {
                     "file_path": node.metadata.get("file_path", ""),
                     "file_name": node.metadata.get("file_name", ""),
