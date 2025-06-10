@@ -12,5 +12,5 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-podman compose --file $COMPOSE_FILE up 
+podman compose --file $COMPOSE_FILE up --abort-on-container-exit 
 
