@@ -68,6 +68,7 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
         
         points = []
         for i, node in enumerate(nodes):
+
             embedding = Settings.embed_model.get_text_embedding(node.text)
             
             # Qdrant MCP server requires this payload format
@@ -86,8 +87,9 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
                 vector={"fast-all-minilm-l6-v2": embedding},
                 payload=payload
             ))
+
+        print(f"Loading chunks into Qdrant collection 'documents'")
         
-        # Upload to Qdrant
         client.upsert(
             collection_name=collection_name,
             points=points,
