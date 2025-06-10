@@ -1,16 +1,17 @@
 # Setup
-ensure that you have Podman installed on your system. (podman is equivalent to docker, but less annoying)
-
-```sh
-brew install podman
-```
 
 ```sh
 git clone git@github.com:aparkerdavid/care-director-expert.git
 cd care-director-expert
 mkdir documents
 ```
-add any documents you'd like to ingest to the `documents` directory and run
+if you don't have podman installed on your system, do so. (podman is equivalent to docker, but somewhat less annoying)
+
+```sh
+brew install podman
+```
+
+add any documents you'd like to ingest to the `documents` directory. and run
 
 ```sh
 ./seed.sh
