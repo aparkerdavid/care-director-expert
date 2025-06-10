@@ -1,4 +1,10 @@
 # Setup
+ensure that you have Podman installed on your system. (podman is equivalent to docker, but less annoying)
+
+```sh
+brew install podman
+```
+
 ```sh
 git clone git@github.com:aparkerdavid/care-director-expert.git
 cd care-director-expert
