@@ -19,12 +19,16 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
     # use FastEmbed (same as MCP server)
     Settings.embed_model = FastEmbedEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
     
+    # Get Qdrant connection details from environment variables with defaults
+    qdrant_host = os.environ.get("QDRANT_HOST", "localhost")
+    qdrant_port = int(os.environ.get("QDRANT_PORT", "6333"))
+    
     try:
-        client = QdrantClient(host="localhost", port=6333)
+        client = QdrantClient(host=qdrant_host, port=qdrant_port)
         collections = client.get_collections()
-        print(f"Connected to Qdrant successfully")
+        print(f"Connected to Qdrant successfully at {qdrant_host}:{qdrant_port}")
     except Exception as e:
-        print(f"Failed to connect to Qdrant: {e}")
+        print(f"Failed to connect to Qdrant at {qdrant_host}:{qdrant_port}: {e}")
         return None
     
     collection_names = [c.name for c in collections.collections]

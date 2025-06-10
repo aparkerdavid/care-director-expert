@@ -8,7 +8,7 @@ dependencies = [
     "llama-index-vector-stores-qdrant",
     "llama-index-embeddings-fastembed",
     "mcp-server-qdrant",
-    "docx2text", # Required for MS Word docs
+    "docx2txt", # Required for MS Word docs
     "openpyxl", # required for MS Excel docs
     "cryptography>=3.1"  # Required for encrypted PDFs
 ]
