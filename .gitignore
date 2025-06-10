@@ -44,3 +44,6 @@ Thumbs.db
 
 # Downloaded README
 qdrant-mcp-readme.md
+/qdrant_storage/
+/raft_state.json
+/aliases/
