@@ -47,3 +47,4 @@ qdrant-mcp-readme.md
 /qdrant_storage/
 /raft_state.json
 /aliases/
+/care_director_expert.egg-info/
