@@ -3,6 +3,7 @@ name = "care-director-expert"
 version = "0.1.0"
 description = "Qdrant MCP server integration with LlamaIndex for document search"
 dependencies = [
+    "tree-sitter-language-pack",
     "llama-index",
     "qdrant-client", 
     "llama-index-vector-stores-qdrant",
