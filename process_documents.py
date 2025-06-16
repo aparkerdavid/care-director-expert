@@ -11,9 +11,10 @@ from qdrant_client import models
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, Settings
 from llama_index.embeddings.fastembed import FastEmbedEmbedding
 from llama_index.vector_stores.qdrant import QdrantVectorStore
+from llama_index.core.node_parser import CodeSplitter, SentenceSplitter
 
 
-def process_documents(docs_path: str = "./documents", collection_name: str = "documents"):
+def process_documents(docs_path: str, collection_name: str):
     """Process documents and store in Qdrant. Rebuilds collection from scratch."""
     
     # use FastEmbed (same as MCP server)
@@ -64,8 +65,6 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
 
     print("Processing documents and storing embeddings...")
     try:
-        from llama_index.core.node_parser import SentenceSplitter
-        
         node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=50)
         nodes = node_parser.get_nodes_from_documents(documents)
         print(f"Created {len(nodes)} chunks")
@@ -107,6 +106,7 @@ def process_documents(docs_path: str = "./documents", collection_name: str = "do
             for collection in collections_after.collections:
                 info = client.get_collection(collection.name)
                 print(f"Collection '{collection.name}' has {info.points_count} points")
+
 
     except Exception as e:
         print(f"Error creating index: {e}")
