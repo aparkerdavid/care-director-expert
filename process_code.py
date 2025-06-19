@@ -194,7 +194,7 @@ def process_code(code_path: str, collection_name: str) -> None:
 if __name__ == "__main__":
     import sys
     
-    code_path = sys.argv[1] if len(sys.argv) > 1 else "./documents/code"
+    code_path = sys.argv[1] if len(sys.argv) > 1 else "./code"
     collection_name = sys.argv[2] if len(sys.argv) > 2 else "code"
     
     process_code(code_path, collection_name)

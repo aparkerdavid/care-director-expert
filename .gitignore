@@ -4,7 +4,8 @@ storage/
 snapshots/
 
 # Documents directory (user's private documents)
-documents/
+documents/*
+code/*
 
 # Python virtual environment (uv)
 .venv/
