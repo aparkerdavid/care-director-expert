@@ -11,7 +11,7 @@ if you don't have podman installed on your system, do so. (podman is equivalent 
 brew install podman
 ```
 
-add any documents you'd like to ingest to the `documents` directory. and run
+add any documents you'd like to ingest to the `documents` directory, and any code repositories to the `code` directory. then run
 
 ```sh
 ./seed.sh

@@ -79,14 +79,14 @@ def process_code(code_path: str, collection_name: str) -> None:
         print(f"Creating code directory: {code_path}")
         os.makedirs(code_path)
         print(f"Please add code files to {code_path} and run again.")
-        return
+        return None
 
     print(f"Loading code files from {code_path}...")
     documents = SimpleDirectoryReader(input_dir=code_path, recursive=True).load_data()
 
     if not documents:
         print(f"No code files found in {code_path}")
-        return
+        return None
 
     print(f"Loaded {len(documents)} code files")
 
@@ -127,7 +127,7 @@ def process_code(code_path: str, collection_name: str) -> None:
     
     if not all_nodes:
         print("No processable code files found")
-        return
+        return None
     
     print(f"Created {len(all_nodes)} total chunks")
     
